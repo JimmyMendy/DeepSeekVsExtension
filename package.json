@@ -14,7 +14,7 @@
   "contributes": {
     "commands": [
       {
-        "command": "Hello Papa",
+        "command": "deepC",
         "title": "Chat with DeepSeek"
       }
     ]
