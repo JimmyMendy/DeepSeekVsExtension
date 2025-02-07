@@ -2,46 +2,49 @@ import * as vscode from "vscode";
 import ollama from "ollama";
 
 export function activate(context: vscode.ExtensionContext) {
-  console.log("DsAssist is now active!");
+  console.log("DeepChat is now active!");
 
-  const disposable = vscode.commands.registerCommand("deepC", () => {
-    const panel = vscode.window.createWebviewPanel(
-      "deepChat",
-      "Deep Seek Chat",
-      vscode.ViewColumn.One,
-      { enableScripts: true }
-    );
+  const disposable = vscode.commands.registerCommand(
+    "myExtension.deepChat",
+    () => {
+      const panel = vscode.window.createWebviewPanel(
+        "deepChat",
+        "Deep Seek Chat",
+        vscode.ViewColumn.One,
+        { enableScripts: true }
+      );
 
-    panel.webview.html = getWebviewContent();
+      panel.webview.html = getWebviewContent();
 
-    panel.webview.onDidReceiveMessage(async (message: any) => {
-      if (message.command === "chat") {
-        const userPrompt = message.text;
-        let responseText = "";
+      panel.webview.onDidReceiveMessage(async (message: any) => {
+        if (message.command === "chat") {
+          const userPrompt = message.text;
+          let responseText = "";
 
-        try {
-          const streamResponse = await ollama.chat({
-            model: "deepseek-r1:latest",
-            messages: [{ role: "user", content: userPrompt }],
-            stream: true,
-          });
+          try {
+            const streamResponse = await ollama.chat({
+              model: "deepseek-r1:latest",
+              messages: [{ role: "user", content: userPrompt }],
+              stream: true,
+            });
 
-          for await (const part of streamResponse) {
-            responseText += part.message.content;
+            for await (const part of streamResponse) {
+              responseText += part.message.content;
+              panel.webview.postMessage({
+                command: "chatReponse",
+                text: responseText,
+              });
+            }
+          } catch (error) {
             panel.webview.postMessage({
-              command: "chatReponse",
-              text: responseText,
+              command: "chatResponse",
+              text: `Error: ${String(error)}`,
             });
           }
-        } catch (error) {
-          panel.webview.postMessage({
-            command: "chatResponse",
-            text: `Error: ${String(error)}`,
-          });
         }
-      }
-    });
-  });
+      });
+    }
+  );
 
   context.subscriptions.push(disposable);
 }
@@ -58,10 +61,10 @@ function getWebviewContent(): string {
 				#prompt { width: 100%; box-sizing: border-box; }
 				#response { border: 1px solid #ccc; margin-top: 1rem; padding: 0.5rem; min-height:}
 			</style>
-			<title>Document</title>
+			<title>DeepChat</title>
 		</head>
 		<body>
-			<h2>DeepSeek VSCode Extention</h2>
+			<h2>DeepChat</h2>
 			<textarea id="prompt" rows="3" placeholder="Ask something..."></textarea><br/>
 			<button id="askBtn">Ask</button>
 			<div id="response"></div>
@@ -70,7 +73,7 @@ function getWebviewContent(): string {
 				const vscode = acquireVsCodeApi()
 
 				document.getElementById('askBtn').addEventListener("click", () => {
-					const text = document.getElementById('Prompt').value;
+					const text = document.getElementById('prompt').value;
 					vscode.postMessage({ command: 'chat', text })
 				});
 
@@ -87,4 +90,4 @@ function getWebviewContent(): string {
 }
 
 // This method is called when your extension is deactivated
-export function deactivate() {}
+// export function deactivate() {}

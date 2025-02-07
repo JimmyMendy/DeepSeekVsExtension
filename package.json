@@ -1,6 +1,6 @@
 {
-  "name": "dsassist",
-  "displayName": "DSassist",
+  "name": "deepchat",
+  "displayName": "deepchat",
   "description": "",
   "version": "0.0.1",
   "engines": {
@@ -14,8 +14,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "deepC",
-        "title": "Chat with DeepSeek"
+        "command": "myExtension.deepChat",
+        "title": "Say Deep"
       }
     ]
   },

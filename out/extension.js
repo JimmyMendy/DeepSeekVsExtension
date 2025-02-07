@@ -1,48 +1,11 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.activate = activate;
-exports.deactivate = deactivate;
-const vscode = __importStar(require("vscode"));
-const ollama_1 = __importDefault(require("ollama"));
+const vscode = require("vscode");
+const ollama_1 = require("ollama");
 function activate(context) {
-    console.log("DsAssist is now active!");
-    const disposable = vscode.commands.registerCommand("deepC", () => {
+    console.log("DeepChat is now active!");
+    const disposable = vscode.commands.registerCommand("myExtension.deepChat", () => {
         const panel = vscode.window.createWebviewPanel("deepChat", "Deep Seek Chat", vscode.ViewColumn.One, { enableScripts: true });
         panel.webview.html = getWebviewContent();
         panel.webview.onDidReceiveMessage(async (message) => {
@@ -86,10 +49,10 @@ function getWebviewContent() {
 				#prompt { width: 100%; box-sizing: border-box; }
 				#response { border: 1px solid #ccc; margin-top: 1rem; padding: 0.5rem; min-height:}
 			</style>
-			<title>Document</title>
+			<title>DeepChat</title>
 		</head>
 		<body>
-			<h2>DeepSeek VSCode Extention</h2>
+			<h2>DeepChat</h2>
 			<textarea id="prompt" rows="3" placeholder="Ask something..."></textarea><br/>
 			<button id="askBtn">Ask</button>
 			<div id="response"></div>
@@ -98,7 +61,7 @@ function getWebviewContent() {
 				const vscode = acquireVsCodeApi()
 
 				document.getElementById('askBtn').addEventListener("click", () => {
-					const text = document.getElementById('Prompt').value;
+					const text = document.getElementById('prompt').value;
 					vscode.postMessage({ command: 'chat', text })
 				});
 
@@ -114,5 +77,5 @@ function getWebviewContent() {
 	`;
 }
 // This method is called when your extension is deactivated
-function deactivate() { }
+// export function deactivate() {}
 //# sourceMappingURL=extension.js.map
